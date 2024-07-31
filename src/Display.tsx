@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Bar from "./Bar";
-import BinarySearch from "./Algorithms/Search/BinarySearch";
-import Command from "./Algorithms/Utils/Command";
+import BinarySearch from "./algorithms/Search/BinarySearch";
+import Command from "./algorithms/Utils/Command";
 
 const Display: React.FC = () => {
   // State to hold generator value
@@ -31,12 +31,12 @@ const Display: React.FC = () => {
   return (
     <div>
       <h2>Generator Component</h2>
-      <p>
+      <div>
         Current Item:{" "}
         {arr.map((num, key) => (
           <Bar key={key} num={num} />
         ))}
-      </p>
+      </div>
     </div>
   );
 };

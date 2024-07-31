@@ -1,26 +1,15 @@
-import React from "react";
-import logo from "./logo.svg";
+/// <reference types="vite-plugin-svgr/client" />
+import Logo from "./logo.svg?react";
 import "./App.css";
-import Display from "./Display";
+import Canvas from "./graphics/Canvas";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Display></Display>
-      </header>
+      {/* <header className="App-header">
+        <Logo className="App-logo" />
+      </header> */}
+      <Canvas/>
     </div>
   );
 }
