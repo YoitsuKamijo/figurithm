@@ -9,7 +9,7 @@ function App() {
       {/* <header className="App-header">
         <Logo className="App-logo" />
       </header> */}
-      <Canvas/>
+      <script src="./graphics/display.ts" type="module"></script>
     </div>
   );
 }

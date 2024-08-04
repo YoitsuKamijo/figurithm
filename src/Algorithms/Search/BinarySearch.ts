@@ -16,32 +16,16 @@ class BinarySearch {
 
   *generator() {
     while (this.l < this.r) {
-      let mid = Math.floor(this.l + this.r);
+      let mid = Math.floor((this.l + this.r)/2);
       let value = this.arr[mid];
-      yield new Command.Builder()
-        .setColor("#FFD700")
-        .setAction(Action.HIGHLIGHT)
-        .setValues([mid])
-        .build();
+      yield [this.arr, this.l, this.r, mid];
       if (value >= this.target) {
         this.r = mid;
-        yield new Command.Builder()
-          .setColor("#F0F2F2")
-          .setValues(
-            Array.from(
-              { length: this.r - this.l },
-              (_, idx) => this.l + idx + 1,
-            ),
-          )
-          .build();
       } else {
         this.l = mid + 1;
-        yield new Command.Builder()
-          .setColor("#F0F2F2")
-          .setValues(Array.from({ length: this.l }, (_, idx) => idx))
-          .build();
       }
     }
+    yield [this.arr, this.l, this.r, null]
   }
 }
 
