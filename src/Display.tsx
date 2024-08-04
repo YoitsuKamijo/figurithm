@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Bar from "./Bar";
-import BinarySearch from "./algorithms/Search/BinarySearch";
+import BinarySearch from "./algorithms/search/BinarySearch";
 import Command from "./algorithms/Utils/Command";
 
 const Display: React.FC = () => {

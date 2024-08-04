@@ -1,7 +1,7 @@
 import { AnyPixelFormat, Camera, MeshBasicMaterial, MeshPhongMaterial, Scene, WebGLRenderer } from "three";
-import BinarySearch from "../algorithms/Search/BinarySearch";
-import Grid from "./utils/Grid";
-import { SelectiveBloomEffectComposer } from "./utils/SelectiveBloomEffectComposer";
+import BinarySearch from "../../algorithms/search/BinarySearch";
+import Grid from "../utils/Grid";
+import { SelectiveBloomEffectComposer } from "../utils/SelectiveBloomEffectComposer";
 
 export class BinarySearchAnimator {
     scene!:Scene;

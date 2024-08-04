@@ -2,7 +2,7 @@ import * as dat from 'dat.gui';
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { BinarySearchAnimator } from './BinarySearchAnimator';
+import { BinarySearchAnimator } from './algorithm_animators/BinarySearchAnimator';
 
 const width = window.innerWidth;
 const height = window.innerHeight;

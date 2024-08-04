@@ -1,6 +1,6 @@
-import Action from "../Utils/Action";
-import Command from "../Utils/Command";
-
+/*
+  class that generates states of every step for binary search algorithm.
+*/
 class BinarySearch {
   arr: number[];
   target: number;
