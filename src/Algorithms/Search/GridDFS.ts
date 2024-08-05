@@ -5,7 +5,7 @@ class GridDFS {
   grid: number[][];
   start: [number, number] = [0, 0];
   target: number;
-  path: Array<[number, number]>;
+  path: Array<[number, number]> = new Array();
   position!: [number, number];
 
   constructor(grid: number[][], target: number, start?: [number, number]) {
@@ -19,7 +19,6 @@ class GridDFS {
   *generator() {
     let stack: Array<[number, number]> = [this.start];
     let dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
-    this.path.push(this.start);
     while (stack) {
       let [x, y] = stack.pop();
 
@@ -28,18 +27,23 @@ class GridDFS {
         continue;
       }
 
+      console.log("generator path", this.path)
       // backtracking
-      while (!this._isNeighbor([x, y], this.path[-1])) {
+      while (this.path.length != 0 && !this._isNeighbor([x, y], this.path.at(-1))) {
+        console.log(this.path)
         this.position = this.path.pop();
-        yield true;
+        yield this.position;
       }
 
       this.position = [x, y];
-      yield true;
+      this.path.push(this.position);
+      yield this.position;
 
       if (this.grid[x][y] == 2) {
         break;
       }
+
+      this.grid[x][y] = -1;
 
       for (let [movX, movY] of dirs) {
         let newX = x + movX, newY = y + movY;
@@ -47,7 +51,7 @@ class GridDFS {
           newX < this.grid.length && 
           0 <= newY && 
           newY < this.grid[0].length) {
-            stack.push([movX, movY]);
+            stack.push([newX, newY]);
         }
       }
     }
@@ -57,3 +61,5 @@ class GridDFS {
     return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) == 1;
   }
 }
+
+export default GridDFS;

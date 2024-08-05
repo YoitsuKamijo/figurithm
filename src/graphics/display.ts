@@ -3,6 +3,7 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { BinarySearchAnimator } from './algorithm_animators/BinarySearchAnimator';
+import { GridSearchAnimator } from './algorithm_animators/GridSearchAnimator';
 
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -32,7 +33,8 @@ var pointLight = new THREE.PointLight(0xffffff, 1);
 camera.add(pointLight);
 scene.add(camera);
 
-const animator = new BinarySearchAnimator(renderer, scene, camera);
+// const animator = new BinarySearchAnimator(renderer, scene, camera);
+const animator = new GridSearchAnimator(renderer, scene, camera);
 
 // Camera control
 // CameraControls.install( { THREE: THREE } );

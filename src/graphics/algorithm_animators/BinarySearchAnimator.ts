@@ -1,4 +1,4 @@
-import { AnyPixelFormat, Camera, MeshBasicMaterial, MeshPhongMaterial, Scene, WebGLRenderer } from "three";
+import { Camera, MeshBasicMaterial, MeshPhongMaterial, Scene, WebGLRenderer } from "three";
 import BinarySearch from "../../algorithms/search/BinarySearch";
 import Grid from "../utils/Grid";
 import { SelectiveBloomEffectComposer } from "../utils/SelectiveBloomEffectComposer";
@@ -92,7 +92,7 @@ export class BinarySearchAnimator {
             this.grid.meshes[0][this.targetIdx].position.y = this.bounceBaseHeight;
             return;
         }
-        this.bounceStep += this.bounceSpeed;
+        this.bounceStep = (this.bounceStep + this.bounceSpeed) % Math.PI;
         this.grid.meshes[0][this.targetIdx].position.y = this.bounceBaseHeight + 0.25 * Math.abs(Math.sin((this.bounceStep)));
     }
 
