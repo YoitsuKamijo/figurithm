@@ -1,6 +1,6 @@
 import { Camera, MeshBasicMaterial, MeshPhongMaterial, Scene, WebGLRenderer } from "three";
 import Grid from "../utils/Grid";
-import GridDFS from "../../algorithms/search/GridDFS.ts";
+import GridDFS from "../../algorithms/search/GridDFS";
 import { SelectiveBloomEffectComposer } from "../utils/SelectiveBloomEffectComposer";
 
 export class GridSearchAnimator {
@@ -44,7 +44,6 @@ export class GridSearchAnimator {
         let state: any;
         for (state of this.algorithm.generator()) {
             this.state = state;
-            console.log(this.state);
             yield true;
         }
         yield false;
@@ -59,12 +58,18 @@ export class GridSearchAnimator {
         const greenMaterial = new MeshBasicMaterial({color: 0x00FF00});
         const glowMaterial = new MeshBasicMaterial({color: 0xF5F5DC});
         const orangeMaterial = new MeshBasicMaterial({color: 0xFFB11B});
+        const redMaterial = new MeshBasicMaterial({color: 0xFF0000});
 
         let algoGrid = this.algorithm.grid;
 
         for (let x = 0; x < algoGrid.length; x++) {
             for (let y = 0; y < algoGrid[0].length; y++) {
-                this.grid.meshes[x][y].material = darkMaterial;
+                if (algoGrid[x][y] == 1) {
+                    this.grid.meshes[x][y].material = redMaterial;
+                } else {
+                    this.grid.meshes[x][y].material = darkMaterial;
+                }
+                
             }
         }
 
@@ -82,8 +87,18 @@ export class GridSearchAnimator {
     }
 
     restoreMaterial() {
-        if (this.state == undefined || this.state.length == 0) {
+        if (this.state == undefined) {
             return;
+        }
+
+        let meshes = this.grid.meshes;
+        for (let x = 0; x < meshes.length; x++) {
+            for (let y = 0; y < meshes[0].length; y++) {
+                console.log(meshes[x][y].material.color)
+                if (meshes[x][y].material.color.getHex() == 0x000000) {
+                    meshes[x][y].material = new MeshPhongMaterial({color: 0x808080});
+                }
+            }
         }
     }
 

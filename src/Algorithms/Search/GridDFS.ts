@@ -18,7 +18,7 @@ class GridDFS {
 
   *generator() {
     let stack: Array<[number, number]> = [this.start];
-    let dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+    let dirs = [[-1, 0], [0, -1], [1, 0], [0, 1]]
     while (stack) {
       let [x, y] = stack.pop();
 
@@ -27,10 +27,8 @@ class GridDFS {
         continue;
       }
 
-      console.log("generator path", this.path)
       // backtracking
       while (this.path.length != 0 && !this._isNeighbor([x, y], this.path.at(-1))) {
-        console.log(this.path)
         this.position = this.path.pop();
         yield this.position;
       }
