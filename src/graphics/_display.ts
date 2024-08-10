@@ -101,7 +101,25 @@ function setDatGui() {
     })
 }
 
-setDatGui();
+function resize() {
+
+	const container = renderer.domElement.parentNode;
+
+	if( container ) {
+
+		const width = container.offsetWidth;
+		const height = container.offsetHeight;
+
+		renderer.setSize( width, height);
+
+		camera.aspect = width / height;
+		camera.updateProjectionMatrix();
+
+	}
+
+}
+
+
 const timer = ms => new Promise(res => setTimeout(res, ms));
 async function runSteps() {
     let counter = 1;
@@ -114,7 +132,7 @@ async function runSteps() {
     console.log(counter);
 }
 
-runSteps();
+
 
 // Cannot use this with postprocessing as of now
 // renderer.setAnimationLoop(animator.render.bind(animator));
@@ -132,6 +150,6 @@ const animate = () => {
     }
 };
 
+setDatGui();
+runSteps();
 animate();
-
-
