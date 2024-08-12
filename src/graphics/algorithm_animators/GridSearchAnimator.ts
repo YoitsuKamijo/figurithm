@@ -22,10 +22,11 @@ export class GridSearchAnimator {
     constructor(renderer: WebGLRenderer, scene:Scene, camera: Camera) {
         this.scene = scene;
         this.gridValues = [
-            [0, 0, 1, 0],
-            [1, 0, 0, 0],
-            [0, 0, 1, 1],
-            [0, 0, 0, 2]
+            [0, 0, 1, 0, 0],
+            [1, 0, 0, 0, 0],
+            [0, 0, 1, 1, 0],
+            [1, 0, 1, 1, 1],
+            [0, 0, 0, 0, 2]
         ];
         this.target = 2;
         this.targetPos = [3, 3];
@@ -69,7 +70,6 @@ export class GridSearchAnimator {
                 } else {
                     this.grid.meshes[x][y].material = darkMaterial;
                 }
-                
             }
         }
 
@@ -94,7 +94,6 @@ export class GridSearchAnimator {
         let meshes = this.grid.meshes;
         for (let x = 0; x < meshes.length; x++) {
             for (let y = 0; y < meshes[0].length; y++) {
-                console.log(meshes[x][y].material.color)
                 if (meshes[x][y].material.color.getHex() == 0x000000) {
                     meshes[x][y].material = new MeshPhongMaterial({color: 0x808080});
                 }
@@ -117,5 +116,13 @@ export class GridSearchAnimator {
 
     render() {
         this.effectComposer.render();
+    }
+
+    dispose() {
+        this.grid.cleanUp();
+    }
+
+    static creator(renderer: WebGLRenderer, scene:Scene, camera: Camera) {
+        return new GridSearchAnimator(renderer, scene, camera);
     }
 }

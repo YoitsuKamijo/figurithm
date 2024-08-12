@@ -34,7 +34,7 @@ export default class Grid {
         for (let i=0; i<this.y; i++) {
             let row:Mesh[] = new Array();
             for (let j=0; j<this.x; j++) {
-                let clone = this.meshTemplate(this.values[i][j])
+                let clone = this.meshTemplate(Math.max(0.5, this.values[i][j]));
                 row.push(clone);
             }
             this.meshes.push(row);
@@ -51,10 +51,17 @@ export default class Grid {
                 //place the bottom the mesh at height of 0;
                 mesh.geometry.computeBoundingBox();
                 let yPos = (mesh.geometry.boundingBox.max.y - mesh.geometry.boundingBox.min.y)/2;
-                console.log(i, j)
-                console.log(i + i * SPACING, yPos, j + j* SPACING);
                 mesh.position.set(j + j* SPACING, yPos, i + i * SPACING);
                 scene.add(mesh);
+            }
+        }
+    }
+
+
+    cleanUp() {
+        for (let i=0; i<this.y; i++) {
+            for (let j=0; j<this.x; j++) {
+                this.meshes[i][j].removeFromParent();
             }
         }
     }

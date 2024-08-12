@@ -1,16 +1,11 @@
-import {useState} from 'react';
-import Box from '@mui/material/Box';
+import { useState } from 'react';
 import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -18,17 +13,30 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import { useTheme } from '@mui/material/styles';
+import ListSubheader from '@mui/material/ListSubheader';
+import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
+import { Collapse } from '@mui/material';
+import Box from '@mui/material/Box';
+import { categoryMap } from './constants';
 
-export default function Navbar() {
+export default function Navbar({ onAnimatorUpdate }) {
     const theme = useTheme();
+
+    const categories = ['search', 'dynamic programming']
+    const [isCategoryMenuOpen, setCategoryMenu] = useState(new Array(categories.length).fill(false));
     const [isDrawerOpen, toggleDrawerOpen] = useState(false);
+
+    function toggleCategoryMenu(index: number) {
+        isCategoryMenuOpen[index] = !isCategoryMenuOpen[index]
+        setCategoryMenu([...isCategoryMenuOpen]);
+    }
 
     return (
         <>
-            { !isDrawerOpen &&
-            <IconButton onClick={() => toggleDrawerOpen(!isDrawerOpen)} sx={{position: 'absolute', left: '16px',top: '16px', color: 'white'}} size="large">
-                <MenuIcon />
-            </IconButton>
+            {!isDrawerOpen &&
+                <IconButton onClick={() => toggleDrawerOpen(!isDrawerOpen)} sx={{ position: 'absolute', left: '16px', top: '16px', color: 'white' }} size="large">
+                    <MenuIcon />
+                </IconButton>
             }
             <Drawer
                 variant="persistent"
@@ -38,23 +46,39 @@ export default function Navbar() {
                     sx: {
                         backdropFilter: "blur(6px)",
                         backgroundColor: "transparent",
-                        borderRight: "1px solid white"
+                        borderRight: "1px solid white",
+                        color: "white"
                     }
                 }}
-                >
+            >
                 <Box display='flex' justifyContent='end' p='8px'>
-                    <IconButton onClick={() =>  toggleDrawerOpen(!isDrawerOpen)} sx={{color: 'white'}} size='large'>
+                    <IconButton onClick={() => toggleDrawerOpen(!isDrawerOpen)} sx={{ color: 'white' }} size='large'>
                         <ChevronLeftIcon />
                     </IconButton>
                 </Box>
-                <Box p={2} width='250px' textAlign='center'
-                    role='presentation'
-                    sx={{
-                        color: 'white'
-                    }}
+                <List
+                    sx={{ width: '250px' }}
+                    component="nav"
+                    aria-labelledby="nested-list-subheader"
                 >
-                    Hello World
-                </Box>
+                    {categories.map((category, index) => (
+                        <>
+                            <ListItemButton onClick={() => { toggleCategoryMenu(index) }}>
+                                <ListItemText primary={categories[index]} />
+                                {isCategoryMenuOpen[index] ? <ExpandLess /> : <ExpandMore />}
+                            </ListItemButton>
+                            <Collapse in={isCategoryMenuOpen[index]} timeout="auto" unmountOnExit>
+                                {categoryMap[category].map((item, index) => (
+                                    <List component="div" disablePadding>
+                                        <ListItemButton sx={{ pl: 4 }} onClick={() => onAnimatorUpdate(item)}>
+                                            <ListItemText primary={item} />
+                                        </ListItemButton>
+                                    </List>
+                                ))}
+                            </Collapse>
+                        </>
+                    ))}
+                </List>
             </Drawer>
         </>
     );

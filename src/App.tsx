@@ -2,18 +2,17 @@
 import Logo from "./logo.svg?react";
 import "./App.css";
 import Navbar from "./components/Navbar";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Display from "./graphics/Display";
+import { Algorithm } from "./components/constants";
 
 function App() {
-  
+  const [algorithm, setAlgorithm] = useState(Algorithm.BINARY_SEARCH);
+
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <Logo className="App-logo" />
-      </header> */}
-      <Navbar></Navbar>
-      <Display></Display>
+      <Navbar onAnimatorUpdate={setAlgorithm}></Navbar>
+      <Display algorithm={algorithm}></Display>
       
       {/* <script src="./graphics/display.ts" type="module"></script>
        */}

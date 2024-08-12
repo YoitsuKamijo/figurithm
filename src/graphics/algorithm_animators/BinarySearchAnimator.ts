@@ -39,7 +39,6 @@ export class BinarySearchAnimator {
         let state: any;
         for (state of this.algorithm.generator()) {
             this.state = state;
-            console.log(this.state);
             yield true;
         }
         yield false;
@@ -99,5 +98,13 @@ export class BinarySearchAnimator {
     render() {
         this.bounceTarget();
         this.effectComposer.render();
+    }
+
+    dispose() {
+        this.grid.cleanUp();
+    }
+
+    static creator(renderer: WebGLRenderer, scene:Scene, camera: Camera) {
+        return new BinarySearchAnimator(renderer, scene, camera);
     }
 }
