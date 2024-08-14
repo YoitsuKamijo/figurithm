@@ -2,6 +2,8 @@ import { Camera, MeshBasicMaterial, MeshPhongMaterial, Scene, WebGLRenderer } fr
 import Grid from "../utils/Grid";
 import GridDFS from "../../algorithms/search/GridDFS";
 import { SelectiveBloomEffectComposer } from "../utils/SelectiveBloomEffectComposer";
+import Obsidian from "../materials/Obsidian";
+import { BACKGROUND_COLOR, CANCEL_COLOR, ERROR_COLOR, PRIMARY_COLOR, SUCCESS_COLOR } from "../constants";
 
 export class GridSearchAnimator {
     scene!:Scene;
@@ -56,10 +58,10 @@ export class GridSearchAnimator {
         }
 
         const darkMaterial = new MeshBasicMaterial({color: 0x000000});
-        const greenMaterial = new MeshBasicMaterial({color: 0x00FF00});
-        const glowMaterial = new MeshBasicMaterial({color: 0xF5F5DC});
-        const orangeMaterial = new MeshBasicMaterial({color: 0xFFB11B});
-        const redMaterial = new MeshBasicMaterial({color: 0xFF0000});
+        const greenMaterial = new MeshBasicMaterial({color: SUCCESS_COLOR});
+        const glowMaterial = new MeshBasicMaterial({color: PRIMARY_COLOR});
+        const orangeMaterial = new MeshBasicMaterial({color: CANCEL_COLOR});
+        const redMaterial = new MeshBasicMaterial({color: ERROR_COLOR});
 
         let algoGrid = this.algorithm.grid;
 
@@ -95,7 +97,7 @@ export class GridSearchAnimator {
         for (let x = 0; x < meshes.length; x++) {
             for (let y = 0; y < meshes[0].length; y++) {
                 if (meshes[x][y].material.color.getHex() == 0x000000) {
-                    meshes[x][y].material = new MeshPhongMaterial({color: 0x808080});
+                    meshes[x][y].material = new MeshPhongMaterial({color: BACKGROUND_COLOR});
                 }
             }
         }

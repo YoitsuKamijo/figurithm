@@ -2,6 +2,7 @@ import { Camera, MeshBasicMaterial, MeshPhongMaterial, Scene, WebGLRenderer } fr
 import BinarySearch from "../../algorithms/search/BinarySearch";
 import Grid from "../utils/Grid";
 import { SelectiveBloomEffectComposer } from "../utils/SelectiveBloomEffectComposer";
+import { BACKGROUND_COLOR, PRIMARY_COLOR, SUCCESS_COLOR } from "../constants";
 
 export class BinarySearchAnimator {
     scene!:Scene;
@@ -53,8 +54,8 @@ export class BinarySearchAnimator {
         const r = this.state[2];
         const mid = this.state[3];
         const darkMaterial = new MeshBasicMaterial({color: 0x000000});
-        const greenMaterial = new MeshBasicMaterial({color: 0x00FF00});
-        const glowMaterial = new MeshBasicMaterial({color: 0xF5F5DC});
+        const greenMaterial = new MeshBasicMaterial({color: SUCCESS_COLOR});
+        const glowMaterial = new MeshBasicMaterial({color: PRIMARY_COLOR});
         
         for (let i = 0; i < this.state[0].length; i++) {
             if (i == l && l == r && this.algorithm.arr[i] == this.algorithm.target){
@@ -78,7 +79,7 @@ export class BinarySearchAnimator {
         const mid = this.state[3];
         for (let i of this.darkenedMesh) {
 
-            this.grid.meshes[0][i].material = new MeshPhongMaterial({color: 0x808080});
+            this.grid.meshes[0][i].material = new MeshPhongMaterial({color: BACKGROUND_COLOR});
         }  
         this.darkenedMesh = new Array();
     }

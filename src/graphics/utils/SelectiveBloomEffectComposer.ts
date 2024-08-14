@@ -3,7 +3,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { Camera, Renderer, Scene, ShaderMaterial, Vector2, WebGLRenderer } from "three";
+import { Camera, Color, Renderer, Scene, ShaderMaterial, Vector2, WebGLRenderer } from "three";
 import { render } from '@testing-library/react';
 
 export class SelectiveBloomEffectComposer {
@@ -91,10 +91,13 @@ export class SelectiveBloomEffectComposer {
         if (this.preBloomProceses != undefined) {
             this.preBloomProceses();
         }
+        let og_background = this.scene.background;
+        this.scene.background = new Color(0x000000);
         this.effectComposer.render();
         if (this.preRenderProcess != undefined) {
             this.preRenderProcess();
         }
+        this.scene.background = og_background;
         this.finalComposer.render();
     }
 }

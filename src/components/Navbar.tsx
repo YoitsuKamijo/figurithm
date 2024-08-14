@@ -46,7 +46,7 @@ export default function Navbar({ onAnimatorUpdate }) {
                     sx: {
                         backdropFilter: "blur(6px)",
                         backgroundColor: "transparent",
-                        borderRight: "1px solid white",
+                        borderRight: "3px solid white",
                         color: "white"
                     }
                 }}
