@@ -4,31 +4,30 @@ import * as dat from 'dat.gui';
 import * as THREE from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { BinarySearchAnimator } from './algorithm_animators/BinarySearchAnimator';
 import { animatorMap } from "../components/constants";
-import StarrySkyShader from "./utils/StarrySkyShader";
 import { BACKGROUND_COLOR, CANCEL_COLOR, PRIMARY_COLOR } from "./constants";
+import ControlBar from "./ControlBar";
 
 export default function Display({ algorithm }) {
-    console.log('Display component: ', algorithm)
+    console.log('Display Algorithm: ', algorithm)
     const refContainer = useRef(null);
     const clock = new THREE.Clock();
     // 30 fps
     const frameRate = 1 / 30;
     let delta = 0;
 
+    let [isPlaying, setIsPlaying] = useState(false);
+    let animator = useRef(null);
     let sceneRef = useRef(null);
     let cameraRef = useRef(null);
     let rendererRef = useRef(null);
     let orbitCtrlRef = useRef(null);
-    let animator: any;
     let requestID: number;
 
     useEffect(() => {
-        sceneSetUp();
-        animatorSetUp();
-        animate();
-        runSteps();
+        setUpScene();
+        setUpAnimator();
+        animate()
         window.addEventListener('resize', handleWindowResize);
 
         return () => {
@@ -37,7 +36,7 @@ export default function Display({ algorithm }) {
 
     }, [algorithm])
 
-    const sceneSetUp = () => {
+    const setUpScene = () => {
         // get container dimensions and use them for scene sizing
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -72,7 +71,7 @@ export default function Display({ algorithm }) {
         }
 
         if (!rendererRef.current) {
-            rendererRef.current = new THREE.WebGLRenderer({antialias: true, alpha: true});
+            rendererRef.current = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             // rendererRef.current.setClearColor( 0x000000, 0 );
             rendererRef.current.setSize(width, height);
             refContainer.current && refContainer.current.appendChild(rendererRef.current.domElement);
@@ -87,16 +86,16 @@ export default function Display({ algorithm }) {
         // const cameraControls = new CameraControls( camera, renderer.domElement );
     }
 
-    const animatorSetUp = () => {
-        animator = animatorMap[algorithm](rendererRef.current, sceneRef.current, cameraRef.current);
-        orbitCtrlRef.current.addEventListener('change', () => { animator.render() });
+    const setUpAnimator = () => {
+        animator.current = animatorMap[algorithm](rendererRef.current, sceneRef.current, cameraRef.current);
+        orbitCtrlRef.current.addEventListener('change', () => { animator.current.render() });
     }
 
     const sceneCleanUp = () => {
         window.cancelAnimationFrame(requestID);
         window.removeEventListener('resize', handleWindowResize);
         // rendererRef.current.renderLists.dispose();
-        animator.dispose();
+        animator.current.dispose();
         orbitCtrlRef.current.dispose();
         orbitCtrlRef.current = null;
     }
@@ -116,25 +115,49 @@ export default function Display({ algorithm }) {
     const _timer = (ms) => new Promise(res => setTimeout(res, ms));
 
     const runSteps = async () => {
-        let counter = 1;
-        let hasState: boolean;
-        for (hasState of animator.next()) {
-            counter += 1
+        while (animator.current.next()) {
+            if (!isPlaying) {
+                console.log('Paused!')
+                break;
+            }
             await _timer(1500);
         }
-        console.log(counter);
     };
+
+    const handlePlay = () => {
+        let shouldPlay = !isPlaying;
+        setIsPlaying(shouldPlay);
+        runSteps();
+    }
+
+    const handleRewind = () => {
+        setIsPlaying(false);
+        animator.current.prev();
+    }
+
+    const handleForward = () => {
+        setIsPlaying(false);
+        animator.current.next();
+    }
 
     const animate = () => {
         requestID = requestAnimationFrame(animate);
         delta += clock.getDelta();
         if (delta > frameRate) {
-            animator.render();
+            animator.current.render();
             delta = delta % frameRate;
         }
     };
 
     return (
-        <div ref={refContainer} />
+        <>
+            <ControlBar
+                isPlaying={isPlaying}
+                handlePlay={handlePlay}
+                handleRewind={handleRewind}
+                handleForward={handleForward}>
+            </ControlBar>
+            <div ref={refContainer} />
+        </>
     )
 }

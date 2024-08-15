@@ -52,6 +52,10 @@ export class GridSearchAnimator {
         yield false;
     }
 
+    prev() {
+        return;
+    }
+
     nonBloomed() {
         if (this.state == undefined) {
             return;
