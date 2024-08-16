@@ -9,32 +9,42 @@ import { BACKGROUND_COLOR, CANCEL_COLOR, PRIMARY_COLOR } from "./constants";
 import ControlBar from "./ControlBar";
 
 export default function Display({ algorithm }) {
-    console.log('Display Algorithm: ', algorithm)
-    const refContainer = useRef(null);
     const clock = new THREE.Clock();
     // 30 fps
     const frameRate = 1 / 30;
     let delta = 0;
 
     let [isPlaying, setIsPlaying] = useState(false);
-    let animator = useRef(null);
-    let sceneRef = useRef(null);
-    let cameraRef = useRef(null);
-    let rendererRef = useRef(null);
-    let orbitCtrlRef = useRef(null);
+    const refContainer = useRef(null);
+    const animatorRef = useRef(null);
+    const sceneRef = useRef(null);
+    const cameraRef = useRef(null);
+    const rendererRef = useRef(null);
+    const orbitCtrlRef = useRef(null);
     let requestID: number;
+    let animatorRunner: NodeJS.Timeout;
 
     useEffect(() => {
         setUpScene();
         setUpAnimator();
-        animate()
         window.addEventListener('resize', handleWindowResize);
+        run();
 
         return () => {
             sceneCleanUp();
+            clearInterval(animatorRunner);
         };
 
     }, [algorithm])
+
+    useEffect(() => {
+        if (isPlaying) {
+            runAnimator();
+        }
+        return () => {
+            clearInterval(animatorRunner);
+        }
+    }, [isPlaying])
 
     const setUpScene = () => {
         // get container dimensions and use them for scene sizing
@@ -87,15 +97,24 @@ export default function Display({ algorithm }) {
     }
 
     const setUpAnimator = () => {
-        animator.current = animatorMap[algorithm](rendererRef.current, sceneRef.current, cameraRef.current);
-        orbitCtrlRef.current.addEventListener('change', () => { animator.current.render() });
+        animatorRef.current = animatorMap[algorithm](rendererRef.current, sceneRef.current, cameraRef.current);
+        orbitCtrlRef.current.addEventListener('change', () => { animatorRef.current.render() });
+    
+    }
+
+    const runAnimator = () => {
+        animatorRunner = setInterval(() => {
+            if (isPlaying) {
+                animatorRef.current.next();
+            }
+        }, 1000);
     }
 
     const sceneCleanUp = () => {
         window.cancelAnimationFrame(requestID);
         window.removeEventListener('resize', handleWindowResize);
         // rendererRef.current.renderLists.dispose();
-        animator.current.dispose();
+        animatorRef.current.dispose();
         orbitCtrlRef.current.dispose();
         orbitCtrlRef.current = null;
     }
@@ -114,37 +133,25 @@ export default function Display({ algorithm }) {
 
     const _timer = (ms) => new Promise(res => setTimeout(res, ms));
 
-    const runSteps = async () => {
-        while (animator.current.next()) {
-            if (!isPlaying) {
-                console.log('Paused!')
-                break;
-            }
-            await _timer(1500);
-        }
-    };
-
     const handlePlay = () => {
-        let shouldPlay = !isPlaying;
-        setIsPlaying(shouldPlay);
-        runSteps();
+        setIsPlaying(!isPlaying);
     }
 
     const handleRewind = () => {
         setIsPlaying(false);
-        animator.current.prev();
+        animatorRef.current.prev();
     }
 
     const handleForward = () => {
         setIsPlaying(false);
-        animator.current.next();
+        animatorRef.current.next();
     }
 
-    const animate = () => {
-        requestID = requestAnimationFrame(animate);
+    const run = () => {
+        requestID = requestAnimationFrame(run);
         delta += clock.getDelta();
         if (delta > frameRate) {
-            animator.current.render();
+            animatorRef.current.render();
             delta = delta % frameRate;
         }
     };
