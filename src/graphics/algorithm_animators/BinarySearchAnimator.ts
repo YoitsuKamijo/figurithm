@@ -11,7 +11,6 @@ export class BinarySearchAnimator {
     target!:number;
     targetIdx!:number;
     algorithm!:any;
-    generator:any;
     grid!:Grid;
     effectComposer!: any;
     state!: any;
@@ -28,7 +27,6 @@ export class BinarySearchAnimator {
         this.target = 11;
         this.targetIdx = 4;
         this.algorithm = new BinarySearch(this.arr, this.target);
-        this.generator = this.algorithm.generator();
         this.grid = new Grid([this.arr]);
         this.grid.addToScene(scene);
 

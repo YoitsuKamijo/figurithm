@@ -25,6 +25,7 @@ export default function Display({ algorithm }) {
     let animatorRunner: NodeJS.Timeout;
 
     useEffect(() => {
+
         setUpScene();
         setUpAnimator();
         window.addEventListener('resize', handleWindowResize);
@@ -40,9 +41,9 @@ export default function Display({ algorithm }) {
     useEffect(() => {
         if (isPlaying) {
             runAnimator();
-        }
-        return () => {
-            clearInterval(animatorRunner);
+            return () => {
+                clearInterval(animatorRunner);
+            }
         }
     }, [isPlaying])
 
@@ -97,6 +98,7 @@ export default function Display({ algorithm }) {
     }
 
     const setUpAnimator = () => {
+        setIsPlaying(false);
         animatorRef.current = animatorMap[algorithm](rendererRef.current, sceneRef.current, cameraRef.current);
         orbitCtrlRef.current.addEventListener('change', () => { animatorRef.current.render() });
     
@@ -113,7 +115,6 @@ export default function Display({ algorithm }) {
     const sceneCleanUp = () => {
         window.cancelAnimationFrame(requestID);
         window.removeEventListener('resize', handleWindowResize);
-        // rendererRef.current.renderLists.dispose();
         animatorRef.current.dispose();
         orbitCtrlRef.current.dispose();
         orbitCtrlRef.current = null;

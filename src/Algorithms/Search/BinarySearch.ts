@@ -1,23 +1,15 @@
 /*
   class that generates states of every step for binary search algorithm.
 */
-class BinarySearch {
-  arr:number[];
-  target:number;
-  l:number;
-  r:number;
-  states: any[] = [];
-  iterator: any;
-
-  constructor(arr: number[], target: number) {
+export default function BinarySearch(arr: number[], target: number) {
     this.arr = arr;
-    this.target = target;
     this.l = 0;
-    this.r = this.arr.length - 1;
-    this.iterator = this.generator()
-  }
+    this.r = arr.length - 1;
+    this.target = target;
+    this.states = [];
+    this.iterator = _generator.bind(this)();
 
-  *generator() {
+  function* _generator() {
     while (this.l < this.r) {
       let mid = Math.floor((this.l + this.r)/2);
       let value = this.arr[mid];
@@ -32,23 +24,22 @@ class BinarySearch {
     yield [this.arr, this.l, this.r, null]
   }
 
-  next() {
+  this.next = () => {
     let {value, done} = this.iterator.next();
     return value;
   }
 
-  prev() {
+  this.prev = () => {
     if (!this.states || !this.states.length) {
       return;
     }
     let state = this.states.pop();
     this.l = state[0]
     this.r = state[1]
-    this.iterator = this.generator();
+    // reset state in generator with new l and r.
+    this.iterator = _generator.bind(this)();
     return [this.arr, ...state];
 
     // return [l, r, mid]
   }
 }
-
-export default BinarySearch;

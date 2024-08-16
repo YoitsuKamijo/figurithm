@@ -43,17 +43,14 @@ export class GridSearchAnimator {
         this.vibrateBaseX = this.grid.meshes[this.targetPos[0]][this.targetPos[1]].position.x;
     }
 
-    *next() {
-        let state: any;
-        for (state of this.algorithm.generator()) {
-            this.state = state;
-            yield true;
-        }
-        yield false;
+    next() {
+        let ret = this.algorithm.next();
+        if (!ret) return;
+        this.state =ret;
     }
 
     prev() {
-        return;
+        this.state = this.algorithm.prev();
     }
 
     nonBloomed() {
