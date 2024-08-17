@@ -13,9 +13,10 @@ export class GridSearchAnimator {
     algorithm!:any;
     grid!:Grid;
     effectComposer!: any;
-    state!: any;
+    position!: any;
+    states: any[] = new Array();
     darkenedMesh: number[] = new Array();
-    self:any;
+
     // target bounce
     vibrateBaseX!:number;
     vibrateSpeed:number = 0.1;
@@ -46,15 +47,22 @@ export class GridSearchAnimator {
     next() {
         let ret = this.algorithm.next();
         if (!ret) return;
-        this.state =ret;
+        this.position = ret.position;
+        this.states.push(ret);
     }
 
     prev() {
-        this.state = this.algorithm.prev();
+        if (this.states.length <= 1) {
+            return;
+        }
+        this.states.pop();
+        let lastState = this.states.at(-1);
+        this.algorithm.setState(lastState);
+        this.position = lastState.position;
     }
 
     nonBloomed() {
-        if (this.state == undefined) {
+        if (this.position == undefined) {
             return;
         }
 
@@ -80,17 +88,17 @@ export class GridSearchAnimator {
             this.grid.meshes[pos[0]][pos[1]].material = glowMaterial;
         }
 
-        if (algoGrid[this.state[0]][this.state[1]] == -1) {
-            this.grid.meshes[this.state[0]][this.state[1]].material = orangeMaterial;
-        } else if (algoGrid[this.state[0]][this.state[1]] == this.target) {
-            this.grid.meshes[this.state[0]][this.state[1]].material = greenMaterial;
+        if (algoGrid[this.position[0]][this.position[1]] == -2) {
+            this.grid.meshes[this.position[0]][this.position[1]].material = orangeMaterial;
+        } else if (algoGrid[this.position[0]][this.position[1]] == this.target) {
+            this.grid.meshes[this.position[0]][this.position[1]].material = greenMaterial;
         } else {
-            this.grid.meshes[this.state[0]][this.state[1]].material = glowMaterial;
+            this.grid.meshes[this.position[0]][this.position[1]].material = glowMaterial;
         }
     }
 
     restoreMaterial() {
-        if (this.state == undefined) {
+        if (this.position == undefined) {
             return;
         }
 
@@ -109,7 +117,7 @@ export class GridSearchAnimator {
         let targetCurX:number = this.grid.meshes[x][y].position.x;
 
         // if target has been found, and has returned to original height, no more bounces;
-        if (this.state.length && this.state[1] == this.state[2] && Math.abs(targetCurX-this.vibrateBaseX) < 0.01) {
+        if (this.position.length && this.position[1] == this.position[2] && Math.abs(targetCurX-this.vibrateBaseX) < 0.01) {
             this.grid.meshes[x][y].position.x = this.vibrateBaseX;
             return;
         }
