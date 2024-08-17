@@ -7,7 +7,6 @@ import {
 } from "three";
 import { GridSearchAnimator } from "./GridSearchAnimator";
 import GridDFS from "../../algorithms/search/GridDFS";
-import Grid from "../utils/Grid";
 import { BACKGROUND_COLOR } from "../constants";
 import {
   DARK_MATERIAL,

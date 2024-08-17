@@ -1,6 +1,6 @@
 import { Camera, Scene, WebGLRenderer } from "three";
 import Grid from "../utils/Grid";
-import { SelectiveBloomEffectComposer } from "../utils/SelectiveBloomEffectComposer";
+import { SelectiveBloomEffectComposer } from "../post_processing/SelectiveBloomEffectComposer";
 
 export class GridSearchAnimator {
   scene!: Scene;

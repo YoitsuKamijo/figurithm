@@ -7,7 +7,7 @@ import {
 } from "three";
 import BinarySearch from "../../algorithms/search/BinarySearch";
 import Grid from "../utils/Grid";
-import { SelectiveBloomEffectComposer } from "../utils/SelectiveBloomEffectComposer";
+import { SelectiveBloomEffectComposer } from "../post_processing/SelectiveBloomEffectComposer";
 import { BACKGROUND_COLOR, PRIMARY_COLOR, SUCCESS_COLOR } from "../constants";
 import { isNullishCoalesce } from "typescript";
 

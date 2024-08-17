@@ -11,7 +11,7 @@ export enum Algorithm {
 
 export const categoryMap = {
   search: [Algorithm.BINARY_SEARCH, Algorithm.BFS, Algorithm.DFS],
-  "dynamic programming": [Algorithm.BINARY_SEARCH],
+  graph: [Algorithm.BINARY_SEARCH],
 };
 
 export const animatorMap = {

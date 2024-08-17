@@ -28,7 +28,7 @@ export default function Display({ algorithm }) {
   const rendererRef = useRef(null);
   const orbitCtrlRef = useRef(null);
   let requestID: number;
-  let animatorRunner: NodeJS.Timeout;
+  let animatorRunner: any;
 
   useEffect(() => {
     setUpScene();
@@ -80,7 +80,7 @@ export default function Display({ algorithm }) {
 
       // Static lighting
       const color = new THREE.Color(0xffffff);
-      const intensity = 0.5;
+      const intensity = 0.1;
       let dirLight = new THREE.DirectionalLight(0xffffff, intensity);
       dirLight.position.setScalar(1);
       const light = new THREE.AmbientLight(color, intensity);

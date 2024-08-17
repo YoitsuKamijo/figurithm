@@ -22,7 +22,7 @@ import { categoryMap } from "./constants";
 export default function Navbar({ onAnimatorUpdate }) {
   const theme = useTheme();
 
-  const categories = ["search", "dynamic programming"];
+  const categories = ["search", "graph"];
   const [isCategoryMenuOpen, setCategoryMenu] = useState(
     new Array(categories.length).fill(false),
   );
