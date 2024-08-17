@@ -5,8 +5,9 @@ class GridBFS {
   grid: number[][];
   start: [number, number] = [0, 0];
   target: number;
-  path: Array<[number, number]> = new Array();
   position!: [number, number];
+  deque: Array<[number, number]> = [];
+  _stateGenerator;
 
   constructor(grid: number[][], target: number, start?: [number, number]) {
     this.grid = grid;
@@ -14,44 +15,36 @@ class GridBFS {
     if (start != undefined) {
       this.start = start;
     }
+    this._stateGenerator = this._generator();
+    // unshift is equivalent to add to front.
+    this.deque.unshift(this.start);
+    console.log(this.deque);
   }
 
-  *generator() {
-    let stack: Array<[number, number]> = [this.start];
+  *_generator() {
     let dirs = [
       [-1, 0],
       [0, -1],
       [1, 0],
       [0, 1],
     ];
-    while (stack) {
-      let newStack = [];
-      for (let i = 0; i < stack.length; i++) {
-        let [x, y] = stack.pop();
+    while (this.deque.length) {
+      for (let _ = 0; _ < this.deque.length; _++) {
+        // shift is the equvalient of remove from front.
+        let [x, y] = this.deque.shift();
+        let nodeVal = this.grid[x][y];
 
-        // check if already visited
-        if (this.grid[x][y] == -1 || this.grid[x][y] == 1) {
+        // check if already visited OR an obstacle
+        if (nodeVal == -1 || nodeVal == 1) {
           continue;
         }
 
-        // backtracking
-        while (
-          this.path.length != 0 &&
-          !this._isNeighbor([x, y], this.path.at(-1))
-        ) {
-          this.position = this.path.pop();
-          yield this.position;
-        }
-
         this.position = [x, y];
-        this.path.push(this.position);
-        yield this.position;
+        this.deque.push(this.position);
 
         if (this.grid[x][y] == 2) {
-          break;
+          return this._stateSnapshot();
         }
-
-        this.grid[x][y] = -1;
 
         for (let [movX, movY] of dirs) {
           let newX = x + movX,
@@ -62,17 +55,41 @@ class GridBFS {
             0 <= newY &&
             newY < this.grid[0].length
           ) {
-            newStack.push([newX, newY]);
+            this.deque.push([newX, newY]);
           }
         }
+        this.grid[x][y] = -1;
+        yield this._stateSnapshot();
       }
-      stack = newStack;
     }
   }
 
-  _isNeighbor(a, b) {
-    return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) == 1;
+  _stateSnapshot(): any {
+    return new GridState(
+      structuredClone(this.grid),
+      structuredClone(this.deque),
+      this.position.slice(),
+    );
   }
+
+  next(): any {
+    let { value, done } = this._stateGenerator.next();
+    return value;
+  }
+
+  setState(state): void {
+    this.grid = structuredClone(state.grid);
+    this.deque = structuredClone(state.deque);
+    this.position = structuredClone(state.position);
+    //reset state generator to reflect new state.
+    this._stateGenerator = this._generator();
+  }
+}
+
+function GridState(grid, deque, position) {
+  this.grid = grid;
+  this.deque = deque;
+  this.position = position;
 }
 
 export default GridBFS;

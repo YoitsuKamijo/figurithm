@@ -33,7 +33,7 @@ class GridDFS {
     while (this.stack) {
       let [x, y] = this.stack.at(-1);
 
-      // check if already visited
+      // check if already visited OR an obstacle
       if (this.grid[x][y] < 0 || this.grid[x][y] == 1) {
         this.stack.pop();
         continue;
@@ -73,11 +73,11 @@ class GridDFS {
     }
   }
 
-  _isNeighbor(a, b) {
+  _isNeighbor(a, b): boolean {
     return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) == 1;
   }
 
-  _stateSnapshot() {
+  _stateSnapshot(): any {
     return new GridState(
       structuredClone(this.grid),
       structuredClone(this.stack),
@@ -86,12 +86,12 @@ class GridDFS {
     );
   }
 
-  next() {
+  next(): any {
     let { value, done } = this._stateGenerator.next();
     return value;
   }
 
-  setState(state) {
+  setState(state): void {
     this.grid = structuredClone(state.grid);
     this.stack = structuredClone(state.stack);
     this.path = structuredClone(state.path);
