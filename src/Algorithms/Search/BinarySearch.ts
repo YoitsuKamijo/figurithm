@@ -6,7 +6,7 @@ class BinarySearch {
   l: number;
   r: number;
   target: number;
-  states: any[]
+  states: any[];
   _stateGenerator: any;
 
   constructor(arr: number[], target: number) {
@@ -18,24 +18,23 @@ class BinarySearch {
     this._stateGenerator = this._generator();
   }
 
-
   *_generator() {
     while (this.l < this.r) {
-      let mid = Math.floor((this.l + this.r)/2);
+      let mid = Math.floor((this.l + this.r) / 2);
       let value = this.arr[mid];
       yield [this.arr, this.l, this.r, mid];
-      this.states.push([this.l, this.r, mid])
+      this.states.push([this.l, this.r, mid]);
       if (value >= this.target) {
         this.r = mid;
       } else {
         this.l = mid + 1;
       }
     }
-    yield [this.arr, this.l, this.r, null]
+    yield [this.arr, this.l, this.r, null];
   }
 
   next() {
-    let {value, done} = this._stateGenerator.next();
+    let { value, done } = this._stateGenerator.next();
     return value;
   }
 
@@ -44,8 +43,8 @@ class BinarySearch {
       return;
     }
     let state = this.states.pop();
-    this.l = state[0]
-    this.r = state[1]
+    this.l = state[0];
+    this.r = state[1];
     // reset state in generator with new l and r.
     this._stateGenerator = this._generator();
     return [this.arr, ...state];

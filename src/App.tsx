@@ -12,10 +12,10 @@ function App() {
 
   return (
     <div className="App">
-      <GlobalStyles styles={{ h1: { color: 'white' } }} />
+      <GlobalStyles styles={{ h1: { color: "white" } }} />
       <Navbar onAnimatorUpdate={setAlgorithm}></Navbar>
       <Display algorithm={algorithm}></Display>
-      
+
       {/* <script src="./graphics/display.ts" type="module"></script>
        */}
     </div>

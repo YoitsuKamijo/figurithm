@@ -27,7 +27,8 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "format": "npx prettier . --write"
   },
   "eslintConfig": {
     "extends": [
